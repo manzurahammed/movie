@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/jquery.datetimepicker.min.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -70,11 +71,21 @@
                 </div>
             </div>
         </nav>
-
+        <div class="container">
+            @if (session('status'))
+                <div class="alert {{session('status')['alert']}}  alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <?php echo session('status')['message']; ?>
+                </div>
+            @endif
+        </div>
         @yield('content')
     </div>
 
     <!-- Scripts -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

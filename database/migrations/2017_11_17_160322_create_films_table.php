@@ -18,8 +18,8 @@ class CreateFilmsTable extends Migration
             $table->string('name');
             $table->text('description',500);
             $table->date('realease_date');
-            $table->float('rating', 8, 2);
-            $table->decimal('ticket_Price', 8, 2);
+            $table->string('rating');
+            $table->decimal('ticket_price', 8, 2);
             $table->string('country');
             $table->integer('genre');
             $table->string('photo');

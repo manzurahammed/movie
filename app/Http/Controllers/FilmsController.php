@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Validator;
+Use Auth;
+use App\Film;
 class FilmsController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class FilmsController extends Controller
      */
     public function index()
     {
-        echo 12;exit;
+        return view('film.filmslist');
     }
 
     /**
@@ -23,7 +25,9 @@ class FilmsController extends Controller
      */
     public function create()
     {
-        //
+        $rating = array(1=>1,2=>2,3=>3,4=>4,5=>5);
+        $genre = array(1=>'Action',2=>'Fantasy',3=>'Adventure');
+        return view('film.create')->with(compact('rating','genre'));
     }
 
     /**
@@ -32,9 +36,41 @@ class FilmsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        Validator::make($request->all(), [
+            'name' => 'bail|required',
+            'realease_date' => 'required|date',
+            'description' => 'required',
+            'country' => 'required',
+            'photo' => 'required|image',
+            'rating' => 'required|integer',
+            'ticket_price' => 'required',
+            'genre' => 'required',
+        ])->validate();
+
+        $film = new Film();
+        $film->name = $request->name;
+        $film->realease_date = $request->realease_date;
+        $film->description = $request->description;
+        $film->rating = $request->rating;
+        $film->country = $request->country;
+        $film->ticket_price = $request->ticket_price;
+        if(!empty($request->genre)){
+            $film->genre = implode(',', $request->genre);
+        }
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = $request['photo'];
+            $destinationPath = 'upload/';
+            $file->move($destinationPath,$filename);
+            $film->photo = 'image_'.rand().'.' . $file->getClientOriginalExtension();
+        }
+        if($film->save()){
+            $res =  array('message'=>'New Films Add','alert'=>'alert-success');
+        }else{
+            $res =  array('message'=>'Empty Films Add Failed','alert'=>'alert-danger');
+        }        
+        return redirect('films')->with('status',$res);
     }
 
     /**
