@@ -8,6 +8,10 @@ Use Auth;
 use App\Film;
 class FilmsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +19,8 @@ class FilmsController extends Controller
      */
     public function index()
     {
-        return view('film.filmslist');
+        $films = Film::paginate(3);
+        return view('film.index')->with(compact('films'));
     }
 
     /**
@@ -50,6 +55,7 @@ class FilmsController extends Controller
 
         $film = new Film();
         $film->name = $request->name;
+        $slug = str_replace(array('-',' '),"_",$request->name);
         $film->realease_date = $request->realease_date;
         $film->description = $request->description;
         $film->rating = $request->rating;
@@ -60,10 +66,10 @@ class FilmsController extends Controller
         }
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
-            $filename = $request['photo'];
+            $filename = 'image_'.rand().'.' . $file->getClientOriginalExtension();
             $destinationPath = 'upload/';
             $file->move($destinationPath,$filename);
-            $film->photo = 'image_'.rand().'.' . $file->getClientOriginalExtension();
+            $film->photo = $filename;
         }
         if($film->save()){
             $res =  array('message'=>'New Films Add','alert'=>'alert-success');

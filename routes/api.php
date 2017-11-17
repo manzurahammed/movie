@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('api')->get('/lol', function (Request $request) {
+    echo 12;
+});
+Route::middleware('api')->group(function () {
+    Route::get('films', 'FrontendController@index');
+    Route::get('films/{slug}', 'FrontendController@film');
 });
