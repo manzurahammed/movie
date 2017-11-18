@@ -60,6 +60,7 @@ class FilmsController extends Controller
         $film->description = $request->description;
         $film->rating = $request->rating;
         $film->country = $request->country;
+        $film->slug = $slug;
         $film->ticket_price = $request->ticket_price;
         if(!empty($request->genre)){
             $film->genre = implode(',', $request->genre);

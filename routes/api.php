@@ -17,6 +17,8 @@ Route::middleware('api')->get('/lol', function (Request $request) {
     echo 12;
 });
 Route::middleware('api')->group(function () {
+	Route::post('films', 'FrontendController@store');
     Route::get('films', 'FrontendController@index');
+    Route::get('films/create', 'FrontendController@create');
     Route::get('films/{slug}', 'FrontendController@film');
 });
